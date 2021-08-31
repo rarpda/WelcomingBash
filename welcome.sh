@@ -30,7 +30,7 @@ printf "$GREETING, $(whoami)! You have reached through to $(hostname) at $IP_ADD
 printf "It's $(date '+%A') and the date is $(date '+%D').\n"
 if [ $# -eq 0 ]
 then
-	get_current_temperature "EDINBURGH"
+	get_current_temperature "LONDON"
 else
 	get_current_temperature $1
 fi
