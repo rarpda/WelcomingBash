@@ -10,3 +10,5 @@ Requires the installation of:
 To run shell command:
 1. Set Welcome.sh to executable - chmod 700 Welcom.sh
 2. Run /Welcome.sh with optional input argument of current location. Defaults to London.
+	Add to .bashrc 
+

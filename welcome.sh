@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #Get current location
 get_current_temperature(){
 	#
@@ -11,7 +10,6 @@ get_current_temperature(){
 	NEW_LOCATION=$(echo $LAST_REPORT | jq -r '.name')
 	bbcweatherTemp=$(curl -s -m 2 -X GET -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" "https://weather-broker-cdn.api.bbci.co.uk/en/forecast/aggregated/${id}" | jq '.forecasts | last | .summary.report.maxTempC')
 	printf "The max temperature in $NEW_LOCATION is $bbcweatherTemp degrees Celsius\n"
-
 }
 
 
