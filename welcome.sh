@@ -2,7 +2,6 @@
 
 #Get current location
 get_current_temperature(){
-	#
 	LOCATION=$1
 	QUERY="https://locator-service.api.bbci.co.uk/locations?api_key=AGbFAKx58hyjQScCXIYrxuEwJh2W2cmv&stack=aws&locale=en&filter=international&place-types=settlement&order=importance&s=${LOCATION}&a=true&format=json"
 	LAST_REPORT=$(curl -s -m 2 -X GET -H "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36" $QUERY | jq '.response.results.results | last')
@@ -23,9 +22,20 @@ elif [[ $time -le  12 ]]
 else
 	GREETING="Good Afternoon"
 fi
+
+
+printf "$GREETING, $(whoami)! You have reached through to $(hostname).\n These are my addresses: \n"
+
+printf "IP Addresses: "
 IP_ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
-printf "$GREETING, $(whoami)! You have reached through to $(hostname) at $IP_ADDRESS.\n"
+for n in $IP_ADDRESS;
+do
+printf "$n "
+done
+printf "\n"
 printf "It's $(date '+%A') and the date is $(date '+%D').\n"
+
+
 if [ $# -eq 0 ]
 then
 	get_current_temperature "LONDON"
@@ -33,5 +43,6 @@ else
 	get_current_temperature $1
 fi
 
+exec bash
 
 exit
