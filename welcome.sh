@@ -11,6 +11,20 @@ get_current_temperature(){
 	printf "The max temperature in $NEW_LOCATION is $bbcweatherTemp degrees Celsius\n"
 }
 
+check_ip_change() {
+	CURRENT_IP=$1
+	FILENAME="ip_address.txt"
+	IP_SAVED=$(cat $FILENAME | xargs)
+	if [[ $CURRENT_IP != $IP_SAVED ]]
+	then 
+	echo "$CURRENT_IP" > $FILENAME
+	printf "IP Changed from $IP_SAVED to $CURRENT_IP \n" 
+	# Send notification
+
+	else
+	printf "Public IP Address: $CURRENT_IP \n"
+	fi
+}
 
 time=$(date '+%k')
 if [[ $time -ge 17 ]] || [[ $time -le 6 ]]
@@ -24,17 +38,18 @@ else
 fi
 
 
-printf "$GREETING, $(whoami)! You have reached through to $(hostname).\n These are my addresses: \n"
-
-printf "IP Addresses: "
+printf "$GREETING, $(whoami)! You have reached through to $(hostname).\nThese are my addresses: \n"
+printf "Private IP Address:"
 IP_ADDRESS=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
 for n in $IP_ADDRESS;
 do
-printf "$n "
+	printf " $n "
 done
 printf "\n"
 printf "It's $(date '+%A') and the date is $(date '+%D').\n"
 
+PUBLIC_IP=$(curl -s -m 2 -X GET https://api.ipify.org)
+check_ip_change $PUBLIC_IP
 
 if [ $# -eq 0 ]
 then
