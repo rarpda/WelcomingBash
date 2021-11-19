@@ -18,9 +18,9 @@ check_ip_change() {
 	if [[ $CURRENT_IP != $IP_SAVED ]]
 	then 
 	echo "$CURRENT_IP" > $FILENAME
-	printf "IP Changed from $IP_SAVED to $CURRENT_IP \n" 
+	printf "IP changed from $IP_SAVED to $CURRENT_IP \n" 
 	# Send notification
-
+	python3 main.py "IP changed from $IP_SAVED to $CURRENT_IP"
 	else
 	printf "Public IP Address: $CURRENT_IP \n"
 	fi
