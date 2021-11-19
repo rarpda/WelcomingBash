@@ -1,0 +1,3 @@
+[submodule "telegramBot"]
+	path = telegramBot
+	url = https://github.com/rarpda/telegramBot
