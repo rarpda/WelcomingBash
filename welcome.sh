@@ -45,11 +45,13 @@ for n in $IP_ADDRESS;
 do
 	printf " $n "
 done
-printf "\n"
-printf "It's $(date '+%A') and the date is $(date '+%D').\n"
 
 PUBLIC_IP=$(curl -s -m 2 -X GET https://api.ipify.org)
 check_ip_change $PUBLIC_IP
+
+printf "\n"
+printf "It's $(date '+%A') and the date is $(date '+%D').\n"
+
 
 if [ $# -eq 0 ]
 then
