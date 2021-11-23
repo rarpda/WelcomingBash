@@ -13,10 +13,11 @@ get_current_temperature(){
 
 check_ip_change() {
 	CURRENT_IP=$1
-	FILENAME="ip_address.txt"
+	DIRNAME=$(dirname $0)
+	FILENAME="$DIRNAME/ip_address.txt"
 	IP_SAVED=$(cat $FILENAME | xargs)
 	if [[ $CURRENT_IP != $IP_SAVED ]]
-	then 
+	then
 	echo "$CURRENT_IP" > $FILENAME
 	printf "IP changed from $IP_SAVED to $CURRENT_IP \n" 
 	# Send notification
@@ -45,7 +46,7 @@ for n in $IP_ADDRESS;
 do
 	printf " $n "
 done
-
+printf "\n"
 PUBLIC_IP=$(curl -s -m 2 -X GET https://api.ipify.org)
 check_ip_change $PUBLIC_IP
 printf "It's $(date '+%A') and the date is $(date '+%D').\n"
