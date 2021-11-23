@@ -11,6 +11,30 @@ get_current_temperature(){
 	printf "The max temperature in $NEW_LOCATION is $bbcweatherTemp degrees Celsius\n"
 }
 
+change_do_firewall(){
+
+FIREWALL_ID="99c1ea85-fd14-498c-a176-f1f395616aad"
+DIGITAL_OCEAN_BASE_URL="https://api.digitalocean.com"
+DIRNAME=$(dirname $0)
+FILENAME="$DIRNAME/fw_rules.json"
+DO_TOKEN=$(cat "$DIRNAME/do_cred.txt")
+echo "Updating firewall on digital ocean"
+response=$(curl -s -X DELETE -H "Content-Type: application/json" -H "Authorization: Bearer $DO_TOKEN"  "$DIGITAL_OCEAN_BASE_URL/v2/firewalls/$FIREWALL_ID/rules" --data "@$FILENAME" --output - /dev/null -w "%{http_code}\n" http://localhost)
+response=(${response[@]})
+if [[ ${response[0]} == "204" ]] 
+then 
+echo "Old IP removed"
+else 
+echo "Old IP not removed"
+return [false]
+fi
+
+sed -i "s/\([0-9]\{1,3\}\(\.\)\?\)\{4\}/$1/g" $FILENAME
+response=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $DO_TOKEN"  "$DIGITAL_OCEAN_BASE_URL/v2/firewalls/$FIREWALL_ID/rules" --data "@$FILENAME" -w "\n%{http_code}\n" http://localhost)
+response=(${response[@]})
+[[ ${response[0]} == "204" ]] && echo "New IP added" || echo "New IP not added"
+}
+
 check_ip_change() {
 	CURRENT_IP=$1
 	DIRNAME=$(dirname $0)
@@ -22,6 +46,7 @@ check_ip_change() {
 	printf "IP changed from $IP_SAVED to $CURRENT_IP \n" 
 	# Send notification
 	python3 main.py "IP changed from $IP_SAVED to $CURRENT_IP"
+	change_do_firewall $CURRENT_IP
 	else
 	printf "Public IP Address: $CURRENT_IP \n"
 	fi
