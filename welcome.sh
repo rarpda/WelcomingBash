@@ -45,7 +45,7 @@ check_ip_change() {
 	echo "$CURRENT_IP" > $FILENAME
 	printf "IP changed from $IP_SAVED to $CURRENT_IP \n" 
 	# Send notification
-	python3 main.py "IP changed from $IP_SAVED to $CURRENT_IP"
+	python3 "$DIRNAME/main.py" "IP changed from $IP_SAVED to $CURRENT_IP"
 	change_do_firewall $CURRENT_IP
 	else
 	printf "Public IP Address: $CURRENT_IP \n"
